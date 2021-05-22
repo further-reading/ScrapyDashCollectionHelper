@@ -7,6 +7,7 @@ class Collection:
         project = sh_client.get_project(proj_id)
         collections = project.collections
         self.store = collections.get_store(collection_name)
+        self.writer = self.store.create_writer()
         if create:
             self.store.set({'_key': 'placeholder', 'value': 123})
             self.store.delete(['placeholder'])
@@ -17,5 +18,7 @@ class Collection:
             return default
         return search[0]['value']
 
-
-collection = Collection(394499, 'twitch')
+    def set(self, key, value, flush=False):
+        self.writer.write({'_key': key, 'value': value})
+        if flush:
+            self.writer.flush()
