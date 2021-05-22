@@ -10,3 +10,12 @@ class Collection:
         if create:
             self.store.set({'_key': 'placeholder', 'value': 123})
             self.store.delete(['placeholder'])
+
+    def get(self, key, default=None):
+        search = self.store.list([key])
+        if not search:
+            return default
+        return search[0]['value']
+
+
+collection = Collection(394499, 'twitch')
